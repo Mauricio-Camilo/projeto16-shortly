@@ -1,0 +1,22 @@
+{
+  "name": "projeto16-shortly",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^5.0.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "expree": "^1.0.1",
+    "nodemon": "^2.0.16",
+    "pg": "^8.7.3"
+  }
+}
