@@ -11,7 +11,7 @@ app.use(json());
 app.use(cors());
 
 app.get("/teste", async (req, res) => {
-    console.log("Teste feito");
+    console.log("Teste do heroku");
     try {
         const result = await db.query(`SELECT * FROM categories`);
         res.send(result.rows);
