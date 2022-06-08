@@ -12,10 +12,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "chalk": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
     "expree": "^1.0.1",
+    "joi": "^17.6.0",
     "nodemon": "^2.0.16",
     "pg": "^8.7.3"
   }

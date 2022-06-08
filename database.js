@@ -2,16 +2,16 @@ import pg from "pg";
 import dotenv from "dotenv";
 dotenv.config();
 
-const {Pool} = pg;
+const { Pool } = pg;
 
-const db = new Pool({
-  connectionString: process.env.DATABASE_URL
-});
+let objectConfig = {connectionString: process.env.DATABASE_URL_LOCAL};
 
 if(process.env.MODE === "PROD") {
-  db.ssl = {
-    rejectUnauthorized: false
+    objectConfig.ssl = {
+      rejectUnauthorized: false
+    }
   }
-}
+
+const db = new Pool(objectConfig);
 
 export default db;
