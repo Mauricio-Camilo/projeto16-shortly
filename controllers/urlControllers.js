@@ -1,17 +1,9 @@
-import joi from "joi";
 import db from "./../database.js";
 import { nanoid } from 'nanoid';
 
 export async function postShorten(req, res) {
 
-    const urlSchema = joi.string().required();
-
-    const validation = urlSchema.validate(req.body.url, { abortEarly: true });
-
-    if (validation.error) return res.status(422).send(validation.error.details);
-
     try {
-
         const {user} = res.locals;
 
         const shortenURL = nanoid(10);
@@ -56,7 +48,6 @@ export async function getShortUrl (req, res) {
         await db.query(`UPDATE urls SET views=$1 WHERE "shortUrl"=$2`, [contagem+1,findShortUrl.rows[0].shortUrl])
        
         res.redirect(200, findShortUrl.rows[0].url);
-        // res.send("Ok");
     }
     catch (error) {
         console.log(error);

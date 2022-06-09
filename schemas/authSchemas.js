@@ -12,3 +12,9 @@ export const signInSchema = joi.object({
     password: joi.string().required()
 });
 
+export const urlSchema = joi.string().required();
+
+
+
+
+
