@@ -43,6 +43,28 @@ export async function getUrlId(req, res) {
     }
 }
 
+export async function getShortUrl (req, res) {
+
+    const {shortUrl} = req.params;
+
+    try {
+        const findShortUrl = await db.query(`SELECT * FROM urls WHERE "shortUrl"=$1`, [shortUrl]);
+        if (findShortUrl.rowCount === 0) return res.status(404).send("Não achou a url encurtada");
+
+        const contagem = findShortUrl.rows[0].views;
+
+        await db.query(`UPDATE urls SET views=$1 WHERE "shortUrl"=$2`, [contagem+1,findShortUrl.rows[0].shortUrl])
+       
+        res.redirect(200, findShortUrl.rows[0].url);
+        // res.send("Ok");
+    }
+    catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+
+}
+
 export async function deleteUrlId(req, res) {
 
     try {
