@@ -6,7 +6,7 @@ import bcrypt from "bcrypt";
 import joi from "joi";
 import {v4 as uuid} from "uuid";
 import db from "./database.js";
-
+import { nanoid } from 'nanoid';
 
 dotenv.config();
 
@@ -53,19 +53,17 @@ app.post("/signin", async (req,res) => {
 
     const validation = loginSchema.validate(req.body, {abortEarly: true});
 
-    if (validation.error) {
-        console.log(validation.error.details);
-        return res.send(validation.error.details).status(422);  
-    }
+    if (validation.error) return res.status(422).send(validation.error.details); 
+    
 
     try {
         const user = await db.query(`SELECT * FROM users WHERE email=$1`, [req.body.email]);
-        if (user.rows.length === 0) return res.sendStatus(401);
+        if (user.rowCount === 0) return res.sendStatus(401);
 
-        if (user.rows.length !== 0 && 
+        if (user.rowCount !== 0 && 
         bcrypt.compareSync(req.body.password, user.rows[0].password)) {
             const token = uuid();
-            await db.query(`INSERT INTO sessions (token, userId) 
+            await db.query(`INSERT INTO sessions (token, "userId") 
             VALUES ($1, $2)`,[token, user.rows[0].id]);
             return res.sendStatus(201);
         }
@@ -77,6 +75,41 @@ app.post("/signin", async (req,res) => {
         res.sendStatus(500); 
       }
 
+})
+
+app.post("/urls/shorten", async (req,res) => {
+
+    const urlSchema = joi.string().required();
+
+    const validation = urlSchema.validate(req.body.url, {abortEarly: true});
+
+    if (validation.error) return res.status(422).send(validation.error.details); 
+    
+    console.log("Chegou aqui");
+
+    const {authorization} = req.headers;
+    const token = authorization?.replace("Bearer", "").trim();
+  
+    if(!token) return res.status(401).send("No token found.");
+    try {
+        const session = await db.query(`SELECT * FROM sessions WHERE token=$1`, [token]);
+        if (session.rows.length === 0) return res.status(401).send("No token found.");
+                
+        const user = await db.query(`SELECT * FROM users WHERE id=$1`, [session.rows[0].userId]);
+        if(user.rowCount === 0) return res.status(401).send("No user found."); 
+    
+        console.log(user.rows[0]);
+
+        const shortenURL = nanoid(10);
+        await db.query(`INSERT INTO urls ("shortUrl", url, "userId")
+        VALUES ($1, $2, $3)`, [shortenURL, req.body.url, user.rows[0].id]);
+        res.send(shortenURL).status(200);
+    }
+
+    catch (error) {
+        console.log(error);
+        res.sendStatus(500); 
+      }
 })
 
 const PORT = process.env.PORT || 5000;
