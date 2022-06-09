@@ -10,7 +10,7 @@ export async function postShorten(req, res) {
 
         await db.query(`INSERT INTO urls ("shortUrl", url, "userId")
         VALUES ($1, $2, $3)`, [shortenURL, req.body.url, user.rows[0].id]);
-        res.send(shortenURL).status(200);
+        res.status(201).send(shortenURL);
     }
 
     catch (error) {
@@ -41,7 +41,7 @@ export async function getShortUrl (req, res) {
 
     try {
         const findShortUrl = await db.query(`SELECT * FROM urls WHERE "shortUrl"=$1`, [shortUrl]);
-        if (findShortUrl.rowCount === 0) return res.status(404).send("Não achou a url encurtada");
+        if (findShortUrl.rowCount === 0) return res.sendStatus(404);
 
         const contagem = findShortUrl.rows[0].views;
 

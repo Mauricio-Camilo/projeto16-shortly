@@ -1,8 +1,13 @@
 import db from "./../database.js";
 
-export default async function getUserUrl (req, res) {
+export default async function getUserUrl(req, res) {
 
     const { id } = req.params;
+
+    const checkUser = await db.query(`SELECT * FROM users WHERE id=$1`, [id]);
+
+    if (checkUser.rowCount === 0) return res.sendStatus(404);
+
     let userObject = {};
     const user = await db.query(
         `SELECT us.id AS "userId", us.name, ur.id, ur."shortUrl", ur.url, ur.views 
@@ -10,6 +15,7 @@ export default async function getUserUrl (req, res) {
         JOIN users us ON ur."userId" = us.id
         WHERE "userId" = $1 ORDER BY ur.id;`, [id]);
     let visitCount = 0;
+
     user.rows.forEach(row => {
         const { views } = row;
         visitCount += views;
@@ -31,7 +37,15 @@ export default async function getUserUrl (req, res) {
                 )
             })
         };
-        return res.send(userObject);
     }
-    else return res.status(400).send("This user does not have shortlinks registered");
- }
+
+    else
+        userObject = {
+            id: checkUser.rows[0].id,
+            name: checkUser.rows[0].name,
+            visitCount: 0,
+            shortenedUrls: 0
+        }
+
+    return res.send(userObject);
+}

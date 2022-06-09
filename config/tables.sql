@@ -13,6 +13,7 @@ CREATE TABLE sessions (
 );
 
 CREATE TABLE urls (
+    id SERIAL PRIMARY KEY,
     "shortUrl" TEXT NOT NULL,
     url TEXT NOT NULL,
     "userId" INTEGER NOT NULL REFERENCES "users"("id"),
