@@ -2,25 +2,25 @@ import joi from "joi";
 import db from "./../database.js";
 import { nanoid } from 'nanoid';
 
-export async function postShorten (req, res) {
+export async function postShorten(req, res) {
 
     const urlSchema = joi.string().required();
 
-    const validation = urlSchema.validate(req.body.url, {abortEarly: true});
+    const validation = urlSchema.validate(req.body.url, { abortEarly: true });
 
-    if (validation.error) return res.status(422).send(validation.error.details); 
+    if (validation.error) return res.status(422).send(validation.error.details);
 
-    const {authorization} = req.headers;
+    const { authorization } = req.headers;
     const token = authorization?.replace("Bearer", "").trim();
-  
-    if(!token) return res.status(401).send("No token found.");
+
+    if (!token) return res.status(401).send("No token found.");
     try {
         const session = await db.query(`SELECT * FROM sessions WHERE token=$1`, [token]);
         if (session.rows.length === 0) return res.status(401).send("No token found.");
-                
+
         const user = await db.query(`SELECT * FROM users WHERE id=$1`, [session.rows[0].userId]);
-        if(user.rowCount === 0) return res.status(401).send("No user found."); 
-    
+        if (user.rowCount === 0) return res.status(401).send("No user found.");
+
         console.log(user.rows[0]);
 
         const shortenURL = nanoid(10);
@@ -31,6 +31,22 @@ export async function postShorten (req, res) {
 
     catch (error) {
         console.log(error);
-        res.sendStatus(500); 
-      }
+        res.sendStatus(500);
+    }
+}
+
+export async function getUrlId(req, res) {
+    try {
+        const { id } = req.params;
+        const findUrl = await db.query(`SELECT * FROM urls WHERE id=$1`, [id]);
+        if (findUrl.rowCount === 0) return res.sendStatus(404);
+        else {
+            const { id, shortUrl, url } = findUrl.rows[0];
+            return res.send({ id, shortUrl, url });
+        }
+    }
+    catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
 }
