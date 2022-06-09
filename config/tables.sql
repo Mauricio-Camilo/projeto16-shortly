@@ -12,5 +12,12 @@ CREATE TABLE sessions (
     "createdAt" TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
+CREATE TABLE urls (
+    "shortUrl" TEXT NOT NULL,
+    url TEXT NOT NULL,
+    "userId" INTEGER NOT NULL REFERENCES "users"("id"),
+    "createdAt" TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
 
 
