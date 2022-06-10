@@ -2,7 +2,8 @@ CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     email TEXT NOT NULL,
-    password TEXT NOT NULL
+    password TEXT NOT NULL,
+    "createdAt" TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE sessions (
@@ -17,6 +18,7 @@ CREATE TABLE urls (
     "shortUrl" TEXT NOT NULL,
     url TEXT NOT NULL,
     "userId" INTEGER NOT NULL REFERENCES "users"("id"),
+    views INTEGER NOT NULL DEFAULT 0,
     "createdAt" TIMESTAMP NOT NULL DEFAULT NOW()
 );
 

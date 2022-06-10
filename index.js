@@ -2,11 +2,6 @@ import express, { json } from "express";
 import cors from "cors";
 import chalk from "chalk";
 import dotenv from "dotenv";
-import bcrypt from "bcrypt";
-import joi from "joi";
-import { v4 as uuid } from "uuid";
-import db from "./database.js";
-import { nanoid } from 'nanoid';
 import authRouter from "./routers/authRouter.js";
 import urlRouter from "./routers/urlRouter.js"
 import usersRouter from "./routers/usersRouter.js"
