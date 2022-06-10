@@ -4,7 +4,7 @@ import db from "./../database.js";
 
 export async function signUp (req, res) {
     
-    const {name, email, password, confirmPassword} = req.body;
+    const {name, email, password} = req.body;
 
     const cryptPassword = bcrypt.hashSync(password, 10);
 

@@ -1,10 +1,10 @@
 import {Router} from "express";
-import { postShorten, getUrlId, getShortUrl, deleteUrlId } from "../controllers/urlControllers.js";
+import { postShortUrl, getUrlId, getShortUrl, deleteUrlId } from "../controllers/urlControllers.js";
 import { validatePostUrl, validateToken } from "./../middlewares/authMiddlewares.js"
 
 const urlRouter = Router();
 
-urlRouter.post("/urls/shorten",validatePostUrl, validateToken, postShorten);
+urlRouter.post("/urls/shorten",validatePostUrl, validateToken, postShortUrl);
 urlRouter.get("/urls/:id", getUrlId);
 urlRouter.get("/urls/open/:shortUrl", getShortUrl);
 urlRouter.delete("/urls/:id", validateToken, deleteUrlId)

@@ -33,7 +33,7 @@ export async function getUserUrl(req, res) {
                         id,
                         shortUrl,
                         url,
-                        views
+                        visitCount: views
                     }
                 )
             })

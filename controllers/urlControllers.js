@@ -1,16 +1,17 @@
 import db from "./../database.js";
 import { nanoid } from 'nanoid';
 
-export async function postShorten(req, res) {
+export async function postShortUrl(req, res) {
 
     try {
         const {user} = res.locals;
 
-        const shortenURL = nanoid(10);
+        const shortUrl = nanoid(10);
 
         await db.query(`INSERT INTO urls ("shortUrl", url, "userId")
-        VALUES ($1, $2, $3)`, [shortenURL, req.body.url, user.rows[0].id]);
-        res.status(201).send(shortenURL);
+        VALUES ($1, $2, $3)`, [shortUrl, req.body.url, user.rows[0].id]);
+        const response = {shortUrl}
+        res.status(201).send(response);
     }
 
     catch (error) {
