@@ -1,6 +1,6 @@
 # Shortly
 
-An easy way to reduce the caracteres size of any url.
+An easy way to reduce the characteres size of any url.
 
 ## About
 
